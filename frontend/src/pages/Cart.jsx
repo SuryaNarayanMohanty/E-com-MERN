@@ -13,8 +13,26 @@ const Cart = () => {
     dispatch(removeFromCart(id));
   };
 
-  const handleUpdateQty = (item, qty) => {
+  const handleUpdateQty = async (item, qty) => {
     if (qty > 0) {
+      // If increasing quantity, verify stock from server
+      if (qty > item.qty) {
+        try {
+          const res = await fetch(`/api/products/${item.productId}`);
+          const data = await res.json();
+          if (!res.ok) {
+            alert('Unable to verify stock right now. Try again later.');
+            return;
+          }
+          if (qty > data.stock) {
+            alert('Cannot add more than available stock');
+            return;
+          }
+        } catch (error) {
+          alert('Unable to verify stock. Check your connection.');
+          return;
+        }
+      }
       dispatch(addToCart({ ...item, qty }));
     }
   };

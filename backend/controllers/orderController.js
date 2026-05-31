@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const sendEmail = require('../utils/sendEmail');
+const Product = require('../models/Product');
 
 const addOrderItems = async (req, res) => {
   try {
@@ -7,6 +8,19 @@ const addOrderItems = async (req, res) => {
     if (items && items.length === 0) {
       return res.status(400).json({ message: 'No order items' });
     } else {
+      // Ensure stock availability and decrement atomically
+      for (const item of items) {
+        // Try to decrement stock only if sufficient stock exists
+        const updated = await Product.findOneAndUpdate(
+          { _id: item.productId, stock: { $gte: item.qty } },
+          { $inc: { stock: -item.qty } },
+          { new: true }
+        );
+        if (!updated) {
+          return res.status(400).json({ message: `Insufficient stock for product ${item.name || item.productId}` });
+        }
+      }
+
       const order = new Order({
         userId: req.user._id,
         items,

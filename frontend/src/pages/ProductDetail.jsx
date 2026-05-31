@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
 import '../styles/product.css';
 
@@ -25,14 +25,23 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
   const handleAddToCart = () => {
     if (product) {
+      const existItem = cartItems.find((x) => x.productId === product._id);
+      const desiredQty = (existItem ? existItem.qty : 0) + 1;
+      if (desiredQty > product.stock) {
+        alert('Cannot add more than available stock');
+        return;
+      }
+
       dispatch(addToCart({
         productId: product._id,
         name: product.name,
         price: product.price,
         imageUrl: product.imageUrl,
-        qty: 1
+        qty: desiredQty
       }));
       alert('Successfully added to your cart!');
     }
