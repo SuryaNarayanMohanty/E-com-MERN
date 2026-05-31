@@ -9,15 +9,25 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, adminSecret } = req.body;
+    const ADMIN_SECRET = process.env.ADMIN_SECRET || 'ADMINCODE123';
     
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
+    // Determine role based on adminSecret
+    let role = 'user';
+    if (adminSecret) {
+      if (adminSecret !== ADMIN_SECRET) {
+        return res.status(400).json({ message: 'Invalid admin secret' });
+      }
+      role = 'admin';
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword, role });
     if (user) {
       
       // Generate a mock OTP

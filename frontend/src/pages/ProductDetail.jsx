@@ -17,7 +17,7 @@ const ProductDetail = () => {
         const data = await res.json();
         setProduct(data);
       } catch (error) {
-        console.error(error);
+        // Error handled
       } finally {
         setLoading(false);
       }

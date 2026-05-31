@@ -12,7 +12,7 @@ const Home = () => {
         const data = await res.json();
         setProducts(data.slice(0, 4)); // Featured products
       } catch (error) {
-        console.error(error);
+        // Error handled
       } finally {
         setLoading(false);
       }

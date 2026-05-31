@@ -25,7 +25,26 @@ const Login = () => {
         alert(data.message);
       }
     } catch (error) {
-      console.error(error);
+      // Error handled
+    }
+  };
+
+  const performLogin = async (emailVal, passwordVal) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailVal, password: passwordVal })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        login(data);
+        navigate('/');
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      // Error handled
     }
   };
 

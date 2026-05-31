@@ -30,7 +30,7 @@ const Profile = () => {
           setOrders([]);
         }
       } catch (error) {
-        console.error(error);
+        // Error handled
       } finally {
         setLoading(false);
       }

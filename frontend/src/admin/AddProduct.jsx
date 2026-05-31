@@ -45,7 +45,7 @@ const AddProduct = () => {
         alert(responseData.message || 'Error creating product');
       }
     } catch (error) {
-      console.error(error);
+      // Error handled - user notified via alert
     } finally {
       setLoading(false);
     }

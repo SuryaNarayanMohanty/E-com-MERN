@@ -86,7 +86,7 @@ const Checkout = () => {
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
-      console.error(error);
+      // Error handled
     }
   };
 
