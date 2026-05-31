@@ -58,6 +58,18 @@ ul {
   transform: translateY(1px);
 }
 
+/* Admin controls sizing */
+.admin-controls .btn {
+  min-width: 260px;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.admin-controls {
+  justify-content: center;
+}
+
 /* Base Headings */
 h1, h2, h3, h4 {
   font-weight: 700;
